@@ -1,0 +1,540 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Jump Park",
+        "description": "API de demostração e avaliação",
+        "contact": {
+            "name": "Cleber Amâncio",
+            "email": "cleberamancio@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://byte1.com.br"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/login": {
+            "post": {
+                "summary": "Efetua login e retorna um token de acesso",
+                "description": "Loga um usuário no webservice.",
+                "operationId": "2a0fe15be0c904d079a25e9b6313112c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "description": "Email do usuário",
+                                        "type": "string",
+                                        "example": "exemplo@exemplo.com"
+                                    },
+                                    "password": {
+                                        "description": "Senha do usuário",
+                                        "type": "string",
+                                        "example": "Abcd1234@"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "description": "Token de acesso via API",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Conteúdo não processável",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "These credentials do not match our records.",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user": {
+            "post": {
+                "summary": "Cria um novo usuário e retorna seus dados como o token de acesso",
+                "description": "Insere um novo usuário na base de dados e retorna um token de acesso.",
+                "operationId": "f93426f67e05bb6ec8004d6bca200a7a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Nome completo do usuário",
+                                        "type": "string",
+                                        "example": "João da Silva"
+                                    },
+                                    "email": {
+                                        "description": "Email do usuário",
+                                        "type": "string",
+                                        "example": "exemplo@exemplo.com"
+                                    },
+                                    "password": {
+                                        "description": "Senha do usuário",
+                                        "type": "string",
+                                        "example": "Abcd1234@"
+                                    },
+                                    "password_confirmation": {
+                                        "description": "Confirmação da senha do usuário",
+                                        "type": "string",
+                                        "example": "Abcd1234@"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "description": "Token de acesso do usuário",
+                                            "type": "string"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "name": {
+                                                    "description": "Nome do usuário",
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "description": "Email do usuário",
+                                                    "type": "string"
+                                                },
+                                                "updated_at": {
+                                                    "description": "Data e hora da última atualização",
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "created_at": {
+                                                    "description": "Data e hora da criação",
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "id": {
+                                                    "description": "ID do usuário",
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/service-order": {
+            "get": {
+                "summary": "Listar ordens de serviço",
+                "description": "Neste endpoint é possível listar e buscar ordens de serviços com paginação de 5 em 5 ítens.",
+                "operationId": "6a8561fecb0797682246ee13b49bf815",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "vehiclePlate": {
+                                        "type": "string",
+                                        "maxLength": 7
+                                    },
+                                    "start": {
+                                        "type": "integer",
+                                        "default": 0
+                                    },
+                                    "limit": {
+                                        "type": "integer",
+                                        "default": 5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "vehiclePlate": {
+                                                "type": "string",
+                                                "maxLength": 7
+                                            },
+                                            "entryDateTime": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "exitDateTime": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "priceType": {
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "type": "string"
+                                            },
+                                            "user_id": {
+                                                "type": "integer"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "user": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "email": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "summary": "Cria uma nova Ordem de Serviço",
+                "description": "Neste endpoint é possível criar uma nova Ordem de Serviço.",
+                "operationId": "0b02d1520301d5eeb0b50ff07edf77bc",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "vehiclePlate": {
+                                        "description": "Placa do veículo",
+                                        "type": "string",
+                                        "maxLength": 7,
+                                        "example": "GSA2564"
+                                    },
+                                    "entryDateTime": {
+                                        "description": "Horário de entrada",
+                                        "type": "string",
+                                        "example": "2023-11-29 16:00:00"
+                                    },
+                                    "exitDateTime": {
+                                        "description": "Horário de saída",
+                                        "type": "string",
+                                        "example": "2023-11-30 16:00:00"
+                                    },
+                                    "priceType": {
+                                        "description": "Tipo da Ordem de Serviço",
+                                        "type": "string",
+                                        "example": "Normal"
+                                    },
+                                    "price": {
+                                        "description": "Preço da Ordem de Serviço",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": "30.60"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "vehiclePlate": {
+                                            "type": "string",
+                                            "maxLength": 7
+                                        },
+                                        "entryDateTime": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "exitDateTime": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "priceType": {
+                                            "type": "string"
+                                        },
+                                        "price": {
+                                            "type": "string"
+                                        },
+                                        "user_id": {
+                                            "type": "integer"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/service-order/edit": {
+            "post": {
+                "summary": "Editar uma Ordem de Serviço",
+                "description": "Edita uma Ordem de Serviço ou um grupo de Ordens de Serviço enviando a placa do veíclo e o valor.",
+                "operationId": "f7284f5529f809e93f0cc48b8ecb42dc",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "vehiclePlate": {
+                                        "description": "Placa do veículo",
+                                        "type": "string",
+                                        "maxLength": 7,
+                                        "example": "GSA2564"
+                                    },
+                                    "entryDateTime": {
+                                        "description": "Horário de entrada",
+                                        "type": "string",
+                                        "example": "2023-11-29 16:00:00"
+                                    },
+                                    "exitDateTime": {
+                                        "description": "Horário de saída",
+                                        "type": "string",
+                                        "example": "2023-11-30 16:00:00"
+                                    },
+                                    "priceType": {
+                                        "description": "Tipo da Ordem de Serviço",
+                                        "type": "string",
+                                        "example": "Normal"
+                                    },
+                                    "price": {
+                                        "description": "Preço da Ordem de Serviço",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": "7.0"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "affected": {
+                                            "description": "Quantidade de registros afetados",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/service-order/delete": {
+            "post": {
+                "summary": "Remove uma Ordem de Serviço",
+                "description": "Remove uma Ordem de Serviço enviando o id.",
+                "operationId": "33862a4dd83ed46b2c4332dc03e50ad2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "description": "Id da Ordem de Serviço na base de dados",
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "True",
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Order not found!",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    }
+}

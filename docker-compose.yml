@@ -1,0 +1,12 @@
+services:
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Abcd1234@
+      MYSQL_DATABASE: jump_park
+      MYSQL_PASSWORD: Abcd1234@
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
